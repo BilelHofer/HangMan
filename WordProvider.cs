@@ -15,6 +15,10 @@ namespace HangMan
     {
         private List<string> words = new List<string> { "elephant", "computer", "umbrella", "bicycle", "mountain", "library", "airplane", "chocolate", "giraffe", "sandwich" };
 
+        /// <summary>
+        /// Returns a random word from the list of words.
+        /// </summary>
+        /// <returns>the word</returns>
         public string GetWord()
         {
             Random rnd = new Random();

@@ -9,12 +9,11 @@ namespace HangMan
 {
     public class GameManager
     {
-        private string wordToGuess;
+        private string wordToGuess = "";
         private List<char> guessedLetters = new List<char>();
         private const int MAX_ATTEMPTS = 6;
         private int attemptsLeft;
         private WordProvider wordProvider = new WordProvider();
-        private Display display = new Display();
 
         /// <summary>
         /// Starts the game
@@ -26,6 +25,9 @@ namespace HangMan
 
             while (attemptsLeft > 0)
             {
+                Display.ShowWord(wordToGuess, guessedLetters);
+                Display.ShowGuessedLetters(wordToGuess, guessedLetters);
+                Display.ShowStat(attemptsLeft);
 
                 Console.Write("Which letter do you want to guess? ");
                 string? input = Console.ReadLine();
@@ -53,9 +55,17 @@ namespace HangMan
                     continue;
                 }
 
-               Console.WriteLine(letter);
-               Console.WriteLine(wordToGuess);
+                guessedLetters.Add(letter);
+
+                // Check if the letter is in the word
+                if (!wordToGuess.Contains(letter))
+                {
+                    attemptsLeft--;
+                }
             }
+
+            // Game over
+            Display.DisplayLose(wordToGuess);
         }
     }
 }
