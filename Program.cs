@@ -4,9 +4,6 @@
  * Summary : HangMan is a game where the player has to guess a word by suggesting letters within a certain number of guesses.
  */
 
-
-using System;
-
 namespace HangMan
 {
     public class Program

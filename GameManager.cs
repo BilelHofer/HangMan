@@ -3,8 +3,6 @@
  * 
  */
 
-
-
 namespace HangMan
 {
     public class GameManager

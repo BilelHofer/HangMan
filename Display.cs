@@ -1,84 +1,93 @@
 ﻿/*
- * Manage the display of the game in the console.
- * 
- */
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+* Manage the display of the game in the console.
+* 
+*/
 
 namespace HangMan
 {
-    public class Display
+    public static class Display
     {
+        // assign each message type its own console row
+        private const int ROW_WORD = 0;
+        private const int ROW_GUESSED_LETTERS = 2;
+        private const int ROW_STAT = 4;
+        private const int ROW_ERROR = 6;
+        private const int ROW_END_MESSAGE = 8;
+
+        // helper to clear a single console line at the given row
+        private static void ClearLine(int row)
+        {
+            Console.SetCursorPosition(0, row);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, row);
+        }
+
         /// <summary>
-        /// Display the word with guessed letters and underscores for unguessed letters.
+        /// Display the word with guessed letters and underscores for unguessed letters
+        /// in its fixed region.
         /// </summary>
-        /// <param name="word">Word to guess</param>
-        /// <param name="guessedLetters">list of letters</param>
         public static void ShowWord(string word, List<char> guessedLetters)
         {
+            ClearLine(ROW_WORD);
+            Console.SetCursorPosition(0, ROW_WORD);
+
             foreach (char c in word)
                 Console.Write(guessedLetters.Contains(c) ? c + " " : "_ ");
         }
 
         /// <summary>
-        /// Display a message when the player lose the game.
+        /// Display the guessed letters, in green if correct and red if not.
         /// </summary>
-        /// <param name="word">the word</param>
-        public static void DisplayLose(string word)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("You lost! The word was: " + word);
-            Console.ResetColor();
-        }
-
-        /// <summary>
-        /// Display the guessed letter, in red if not in the word, and in green if it is in the word.
-        /// </summary>
-        /// <param name="word">word to guess</param>
-        /// <param name="guessedLetters">guessed letter</param>
         public static void ShowGuessedLetters(string word, List<char> guessedLetters)
         {
+            ClearLine(ROW_GUESSED_LETTERS);
+            Console.SetCursorPosition(0, ROW_GUESSED_LETTERS);
+
             Console.Write("Guessed letters: ");
             foreach (char c in guessedLetters)
             {
                 if (word.Contains(c))
-                {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(c + " ");
-                }
                 else
-                {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(c + " ");
-                }
+
+                Console.Write(c + " ");
             }
             Console.ResetColor();
-            Console.WriteLine();
         }
 
         /// <summary>
-        /// Display the number of attempts left for the player.
+        /// Display the number of attempts left.
         /// </summary>
-        /// <param name="attemptsLeft">Attempts left</param>
         public static void ShowStat(int attemptsLeft)
         {
+            ClearLine(ROW_STAT);
+            Console.SetCursorPosition(0, ROW_STAT);
             Console.WriteLine("Attempts left: " + attemptsLeft);
         }
 
         /// <summary>
-        /// Display an error message in red color.
+        /// Display an error message in red in its own region.
         /// </summary>
-        /// <param name="message">the message</param>
         public static void DisplayError(string message)
         {
+            ClearLine(ROW_ERROR);
+            Console.SetCursorPosition(0, ROW_ERROR);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
             Console.ResetColor();
         }
-    }
 
+        /// <summary>
+        /// Display the lose message in its own region.
+        /// </summary>
+        public static void DisplayLose(string word)
+        {
+            ClearLine(ROW_END_MESSAGE);
+            Console.SetCursorPosition(0, ROW_END_MESSAGE);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("You lost! The word was: " + word);
+            Console.ResetColor();
+        }
+    }
 }
