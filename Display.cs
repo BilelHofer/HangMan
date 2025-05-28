@@ -8,86 +8,131 @@ namespace HangMan
     public static class Display
     {
         // assign each message type its own console row
-        private const int ROW_WORD = 0;
-        private const int ROW_GUESSED_LETTERS = 2;
-        private const int ROW_STAT = 4;
-        private const int ROW_ERROR = 6;
-        private const int ROW_END_MESSAGE = 8;
+        private const int RowWord = 0;
+        private const int RowGuessedLetters = 2;
+        private const int RowStat = 4;
+        private const int RowError = 12;
+        private const int RowEndMessage = 16;
+        private const int RowDrawing = 6;
+        private const int DrawingHeight = 6;
 
-        // helper to clear a single console line at the given row
-        private static void ClearLine(int row)
+        /// <summary>
+        /// Clear a specific region in the console by overwriting it with spaces.
+        /// </summary>
+        /// <param name="startRow">Starting row</param>
+        /// <param name="height">Number of row</param>
+        private static void ClearRegion(int startRow, int height)
         {
-            Console.SetCursorPosition(0, row);
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, row);
+            for (int i = 0; i < height; i++)
+            {
+                Console.SetCursorPosition(0, startRow + i);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
         }
 
         /// <summary>
-        /// Display the word with guessed letters and underscores for unguessed letters
-        /// in its fixed region.
+        /// Clear a specific line in the console by overwriting it with spaces.
         /// </summary>
+        /// <param name="row">Row fill with white space</param>
+        private static void ClearLine(int row) => ClearRegion(row, 1);
+
+        /// <summary>
+        /// Display the word to guess, showing guessed letters and underscores for unguessed letters.
+        /// </summary>
+        /// <param name="word">Word to guess</param>
+        /// <param name="guessedLetters">Guessed letters</param>
         public static void ShowWord(string word, List<char> guessedLetters)
         {
-            ClearLine(ROW_WORD);
-            Console.SetCursorPosition(0, ROW_WORD);
-
+            ClearLine(RowWord);
+            Console.SetCursorPosition(0, RowWord);
             foreach (char c in word)
                 Console.Write(guessedLetters.Contains(c) ? c + " " : "_ ");
         }
 
         /// <summary>
-        /// Display the guessed letters, in green if correct and red if not.
+        /// Display the guessed letters in green if they are in the word, otherwise in red.
         /// </summary>
+        /// <param name="word">Word to guess</param>
+        /// <param name="guessedLetters">Guessed letters</param>
         public static void ShowGuessedLetters(string word, List<char> guessedLetters)
         {
-            ClearLine(ROW_GUESSED_LETTERS);
-            Console.SetCursorPosition(0, ROW_GUESSED_LETTERS);
-
+            ClearLine(RowGuessedLetters);
+            Console.SetCursorPosition(0, RowGuessedLetters);
             Console.Write("Guessed letters: ");
             foreach (char c in guessedLetters)
             {
-                if (word.Contains(c))
-                    Console.ForegroundColor = ConsoleColor.Green;
-                else
-                    Console.ForegroundColor = ConsoleColor.Red;
-
+                Console.ForegroundColor = word.Contains(c)
+                    ? ConsoleColor.Green
+                    : ConsoleColor.Red;
                 Console.Write(c + " ");
             }
             Console.ResetColor();
         }
 
         /// <summary>
-        /// Display the number of attempts left.
+        /// Display an error message in red
         /// </summary>
         public static void ShowStat(int attemptsLeft)
         {
-            ClearLine(ROW_STAT);
-            Console.SetCursorPosition(0, ROW_STAT);
+            ClearLine(RowStat);
+            Console.SetCursorPosition(0, RowStat);
             Console.WriteLine("Attempts left: " + attemptsLeft);
         }
 
-        /// <summary>
-        /// Display an error message in red in its own region.
-        /// </summary>
         public static void DisplayError(string message)
         {
-            ClearLine(ROW_ERROR);
-            Console.SetCursorPosition(0, ROW_ERROR);
+            ClearLine(RowError);
+            Console.SetCursorPosition(0, RowError);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
             Console.ResetColor();
         }
 
         /// <summary>
-        /// Display the lose message in its own region.
+        /// Display the lose message
         /// </summary>
         public static void DisplayLose(string word)
         {
-            ClearLine(ROW_END_MESSAGE);
-            Console.SetCursorPosition(0, ROW_END_MESSAGE);
+            ClearLine(RowEndMessage);
+            Console.SetCursorPosition(0, RowEndMessage);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("You lost! The word was: " + word);
             Console.ResetColor();
+        }
+
+        /// <summary>
+        /// Draw the hangman figure based on the number of wrong attempts.
+        /// </summary>
+        /// <param name="wrongCount">Wrong Attempts</param>
+        public static void ShowHangman(int wrongCount)
+        {
+            // 6 attempts to draw the hangman figure
+            var lines = new List<string>
+            {
+                "   +---+",
+                "   |   |",
+                "   |    ",
+                "   |    ",
+                "   |    ",
+                "  _|_   "
+            };
+
+            if (wrongCount >= 1) lines[2] = "   |   O";
+            if (wrongCount >= 2) lines[3] = "   |   |";
+            if (wrongCount >= 3) lines[3] = "   |  /|";
+            if (wrongCount >= 4) lines[3] = "   |  /|\\";
+            if (wrongCount >= 5) lines[4] = "   |  / ";
+            if (wrongCount >= 6) lines[4] = "   |  / \\";
+
+            // clear the previous hangman drawing
+            ClearRegion(RowDrawing, DrawingHeight);
+
+            // display the hangman figure
+            for (int i = 0; i < lines.Count; i++)
+            {
+                Console.SetCursorPosition(0, RowDrawing + i);
+                Console.WriteLine(lines[i]);
+            }
         }
     }
 }

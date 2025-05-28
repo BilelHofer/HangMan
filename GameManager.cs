@@ -20,27 +20,35 @@ namespace HangMan
         {
             wordToGuess = wordProvider.GetWord().ToUpper();
             attemptsLeft = MAX_ATTEMPTS;
+            string errorMessage = "";
 
             while (attemptsLeft > 0)
             {
+                Console.Clear();
                 Display.ShowWord(wordToGuess, guessedLetters);
                 Display.ShowGuessedLetters(wordToGuess, guessedLetters);
                 Display.ShowStat(attemptsLeft);
+                Display.ShowHangman(MAX_ATTEMPTS - attemptsLeft);
+                Display.DisplayError(errorMessage);
+                errorMessage = "";
 
+                Console.SetCursorPosition(0, 13);
                 Console.Write("Which letter do you want to guess? ");
+
+
                 string? input = Console.ReadLine();
 
                 // Check if the input is null
                 if (string.IsNullOrEmpty(input))
                 {
-                    Display.DisplayError("Invalid input. Please enter a valid letter.");
+                    errorMessage = "Invalid input. Please enter a valid letter.";
                     continue;
                 }
 
                 // Check if the letter is valid
                 if (input.Length != 1 || !char.IsLetter(input[0]))
                 {
-                    Display.DisplayError("Invalid input. Please enter a valid letter.");
+                    errorMessage = "Invalid input. Please enter a valid letter.";
                     continue;
                 }
 
@@ -49,7 +57,7 @@ namespace HangMan
                 // Check if the letter is already guessed
                 if (guessedLetters.Contains(letter))
                 {
-                    Display.DisplayError("You have already guessed this letter.");
+                    errorMessage = "You have already guessed this letter.";
                     continue;
                 }
 
@@ -62,6 +70,7 @@ namespace HangMan
                 }
             }
 
+            Display.ShowHangman(MAX_ATTEMPTS - attemptsLeft);
             // Game over
             Display.DisplayLose(wordToGuess);
         }
