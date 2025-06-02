@@ -6,6 +6,9 @@
 
 namespace HangMan
 {
+    /// <summary>
+    /// Main entry point for the game.
+    /// </summary>
     public class Program
     {
         static void Main(string[] args)

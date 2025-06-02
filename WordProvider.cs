@@ -1,11 +1,9 @@
-﻿/*
- * List of words for the game
- * 
- */
-
-namespace HangMan
+﻿namespace HangMan
 {
-   public class WordProvider
+    /// <summary>
+    /// Provides a random word from a predefined list of words for the Hangman game.
+    /// </summary>
+    public class WordProvider
     {
         private List<string> words = new List<string> { "elephant", "computer", "umbrella", "bicycle", "mountain", "library", "airplane", "chocolate", "giraffe", "sandwich" };
 

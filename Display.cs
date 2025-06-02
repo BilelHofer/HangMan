@@ -1,10 +1,8 @@
-﻿/*
-* Manage the display of the game in the console.
-* 
-*/
-
-namespace HangMan
+﻿namespace HangMan
 {
+    /// <summary>
+    /// Manage the display of the game state.
+    /// </summary>
     public static class Display
     {
         // assign each message type its own console row
@@ -70,7 +68,7 @@ namespace HangMan
         }
 
         /// <summary>
-        /// Display an error message in red
+        /// Display an error message in red.
         /// </summary>
         public static void ShowStat(int attemptsLeft)
         {
@@ -89,7 +87,7 @@ namespace HangMan
         }
 
         /// <summary>
-        /// Display the lose message
+        /// Display a message indicating the player has lost.
         /// </summary>
         public static void DisplayLose(string word)
         {
@@ -100,6 +98,10 @@ namespace HangMan
             Console.ResetColor();
         }
 
+        /// <summary>
+        /// Display a message indicating the player has won.
+        /// </summary>
+        /// <param name="word"></param>
         public static void DisplayWin(string word)
         {
             ClearLine(RowEndMessage);

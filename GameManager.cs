@@ -1,10 +1,8 @@
-﻿/*
- * GameCore
- * 
- */
-
-namespace HangMan
+﻿namespace HangMan
 {
+    /// <summary>
+    /// Manages the game logic for the game.
+    /// </summary>
     public class GameManager
     {
         private string wordToGuess = "";
@@ -14,7 +12,7 @@ namespace HangMan
         private WordProvider wordProvider = new WordProvider();
 
         /// <summary>
-        /// Starts the game
+        /// Starts the game.
         /// </summary>
         public void Start()
         {
@@ -25,73 +23,20 @@ namespace HangMan
 
             do
             {
-                Console.Clear();
-                Display.ShowWord(wordToGuess, guessedLetters);
-                Display.ShowGuessedLetters(wordToGuess, guessedLetters);
-                Display.ShowStat(attemptsLeft);
-                Display.ShowHangman(MAX_ATTEMPTS - attemptsLeft);
-                Display.DisplayError(errorMessage);
+                DisplayGameState(errorMessage);
                 errorMessage = "";
 
                 Console.SetCursorPosition(0, 13);
                 Console.Write("Which letter do you want to guess? ");
                 string? input = Console.ReadLine();
 
-                // Process input only if valid
-                if (!string.IsNullOrEmpty(input))
-                {
-                    if (input.Length == 1 && char.IsLetter(input[0]))
-                    {
-                        char letter = char.ToUpper(input[0]);
-
-                        if (!guessedLetters.Contains(letter))
-                        {
-                            guessedLetters.Add(letter);
-
-                            // Check if the letter is in the word
-                            if (!wordToGuess.Contains(letter))
-                            {
-                                attemptsLeft--;
-                            }
-                            else
-                            {
-                                // Check if the player has won
-                                bool allLettersGuessed = true;
-                                foreach (char c in wordToGuess)
-                                {
-                                    if (!guessedLetters.Contains(c))
-                                    {
-                                        allLettersGuessed = false;
-                                        break;
-                                    }
-                                }
-                                gameWon = allLettersGuessed;
-                            }
-                        }
-                        else
-                        {
-                            errorMessage = "You have already guessed this letter.";
-                        }
-                    }
-                    else
-                    {
-                        errorMessage = "Invalid input. Please enter a valid letter.";
-                    }
-                }
-                else
-                {
-                    errorMessage = "Invalid input. Please enter a valid letter.";
-                }
+                // Validate and process input
+                errorMessage = ProcessInput(input, ref gameWon);
             } while (attemptsLeft > 0 && !gameWon);
 
-            // Display final state
-            Console.Clear();
-            Display.ShowWord(wordToGuess, guessedLetters);
-            Display.ShowGuessedLetters(wordToGuess, guessedLetters);
-            Display.ShowStat(attemptsLeft);
-            Display.ShowHangman(MAX_ATTEMPTS - attemptsLeft);
+            // Display final state and result
+            DisplayGameState("");
 
-            // Game over
             if (gameWon)
             {
                 Display.DisplayWin(wordToGuess);
@@ -100,6 +45,65 @@ namespace HangMan
             {
                 Display.DisplayLose(wordToGuess);
             }
+        }
+
+        /// <summary>
+        /// Displays the current game state.
+        /// </summary>
+        private void DisplayGameState(string errorMessage)
+        {
+            Console.Clear();
+            Display.ShowWord(wordToGuess, guessedLetters);
+            Display.ShowGuessedLetters(wordToGuess, guessedLetters);
+            Display.ShowStat(attemptsLeft);
+            Display.ShowHangman(MAX_ATTEMPTS - attemptsLeft);
+            Display.DisplayError(errorMessage);
+        }
+
+        /// <summary>
+        /// Processes the user input and returns any error message.
+        /// </summary>
+        private string ProcessInput(string? input, ref bool gameWon)
+        {
+            if (string.IsNullOrEmpty(input) || input.Length != 1 || !char.IsLetter(input[0]))
+            {
+                return "Invalid input. Please enter a valid letter.";
+            }
+
+            char letter = char.ToUpper(input[0]);
+
+            if (guessedLetters.Contains(letter))
+            {
+                return "You have already guessed this letter.";
+            }
+
+            guessedLetters.Add(letter);
+
+            if (!wordToGuess.Contains(letter))
+            {
+                attemptsLeft--;
+            }
+            else
+            {
+                gameWon = CheckIfWon();
+            }
+
+            return "";
+        }
+
+        /// <summary>
+        /// Checks if all letters have been guessed.
+        /// </summary>
+        private bool CheckIfWon()
+        {
+            foreach (char letter in wordToGuess)
+            {
+                if (!guessedLetters.Contains(letter))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
