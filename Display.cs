@@ -100,6 +100,15 @@ namespace HangMan
             Console.ResetColor();
         }
 
+        public static void DisplayWin(string word)
+        {
+            ClearLine(RowEndMessage);
+            Console.SetCursorPosition(0, RowEndMessage);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Congratulations! You guessed the word: " + word);
+            Console.ResetColor();
+        }
+
         /// <summary>
         /// Draw the hangman figure based on the number of wrong attempts.
         /// </summary>
