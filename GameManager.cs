@@ -17,6 +17,14 @@
         public void Start()
         {
             wordToGuess = wordProvider.GetWord().ToUpper();
+
+            if (string.IsNullOrEmpty(wordToGuess))
+            {
+                Console.WriteLine("Error : No word finded !");
+                return;
+            }
+
+
             attemptsLeft = MAX_ATTEMPTS;
             string errorMessage = "";
             bool gameWon = false;
