@@ -1,4 +1,6 @@
-﻿namespace HangMan
+﻿using System.Diagnostics;
+
+namespace HangMan
 {
     /// <summary>
     /// Manages the game logic for the game.
@@ -10,6 +12,7 @@
         private const int MAX_ATTEMPTS = 6;
         private int attemptsLeft;
         private WordProvider wordProvider = new WordProvider();
+        private Stopwatch gameTimer = new Stopwatch();
 
         /// <summary>
         /// Starts the game.
@@ -26,6 +29,10 @@
 
 
             attemptsLeft = MAX_ATTEMPTS;
+
+            // Start the timer
+            gameTimer.Start();
+
             string errorMessage = "";
             bool gameWon = false;
 
@@ -42,12 +49,15 @@
                 errorMessage = ProcessInput(input, ref gameWon);
             } while (attemptsLeft > 0 && !gameWon);
 
+            // Stop the timer
+            gameTimer.Stop();
+
             // Display final state and result
             DisplayGameState("");
 
             if (gameWon)
             {
-                Display.DisplayWin(wordToGuess);
+                Display.DisplayWin(wordToGuess, gameTimer.Elapsed);
             }
             else
             {

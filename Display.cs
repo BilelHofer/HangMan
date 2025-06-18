@@ -11,6 +11,7 @@
         private const int RowStat = 4;
         private const int RowError = 12;
         private const int RowEndMessage = 16;
+        private const int RowTime = 17;
         private const int RowDrawing = 6;
         private const int DrawingHeight = 6;
 
@@ -101,14 +102,17 @@
         /// <summary>
         /// Display a message indicating the player has won.
         /// </summary>
-        /// <param name="word"></param>
-        public static void DisplayWin(string word)
+        /// <param name="word">word to guess</param>
+        /// <param name="gameTime">Time taken to guess the word</param>
+        public static void DisplayWin(string word, TimeSpan gameTime)
         {
             ClearLine(RowEndMessage);
             Console.SetCursorPosition(0, RowEndMessage);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Congratulations! You guessed the word: " + word);
             Console.ResetColor();
+
+            ShowGameTime(gameTime);
         }
 
         /// <summary>
@@ -144,6 +148,27 @@
                 Console.SetCursorPosition(0, RowDrawing + i);
                 Console.WriteLine(lines[i]);
             }
+        }
+        /// <summary>
+        /// Show the elapsed game time in the console.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private static void ShowGameTime(TimeSpan gameTime)
+        {
+            ClearLine(RowTime);
+            Console.SetCursorPosition(0, RowTime);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            if (gameTime.TotalMinutes >= 1)
+            {
+                Console.WriteLine($"Time taken: {gameTime.Minutes:D2}:{gameTime.Seconds:D2} minutes");
+            }
+            else
+            {
+                Console.WriteLine($"Time taken: {gameTime.Seconds} seconds");
+            }
+
+            Console.ResetColor();
         }
     }
 }
