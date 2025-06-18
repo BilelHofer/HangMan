@@ -11,5 +11,8 @@
     <None Include="words.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	 <None Include="leaderboard.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	 </None>
   </ItemGroup>
 </Project>

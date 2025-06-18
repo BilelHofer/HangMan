@@ -12,6 +12,7 @@ namespace HangMan
         private const int MAX_ATTEMPTS = 6;
         private int attemptsLeft;
         private WordProvider wordProvider = new WordProvider();
+        private LeaderboardManager leaderboard = new LeaderboardManager();
         private Stopwatch gameTimer = new Stopwatch();
 
         /// <summary>
@@ -51,6 +52,9 @@ namespace HangMan
 
             // Stop the timer
             gameTimer.Stop();
+
+            // Save the score
+            SaveScore(gameWon);
 
             // Display final state and result
             DisplayGameState("");
@@ -122,6 +126,24 @@ namespace HangMan
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Saves the game score to the leaderboard.
+        /// </summary>
+        /// <param name="gameWon">If the game is won</param>
+        private void SaveScore(bool gameWon)
+        {
+            var score = new GameScore
+            {
+                Word = wordToGuess,
+                TimeInSeconds = gameTimer.Elapsed.TotalSeconds,
+                Date = DateTime.Now,
+                Won = gameWon,
+                AttemptsUsed = MAX_ATTEMPTS - attemptsLeft
+            };
+
+            leaderboard.AddScore(score);
         }
     }
 }
